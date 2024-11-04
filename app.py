@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import socket
+import os
 from service_detection import detect_service
 from os_fingerprinting import os_fingerprint
 from report_generator import generate_report
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Replace with your actual secret key
+app.secret_key = os.urandom(24)  # Generates a random secret key
 
 def scan_port(ip, port):
     """Scans a single port on the target IP address to detect the service."""
