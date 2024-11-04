@@ -10,11 +10,6 @@ PortSentry is a web application designed to display detailed scan reports. It pr
 - **User-Friendly Interface**: Clean and simple design for easy navigation and understanding.
 - **Responsive Design**: Adapts to different screen sizes for usability on various devices.
 
-## Technologies Used
-- **Frontend**: HTML, CSS
-- **Backend**: Flask (Python)
-- **Templating Engine**: Jinja2
-
 ## Installation
 To set up the project, clone the repository, set up a virtual environment, and install the required dependencies as specified in the project's requirements.
 
