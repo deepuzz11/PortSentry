@@ -1,19 +1,30 @@
-import json
-
-def generate_report(open_ports, filename='scan_report.json'):
+def generate_report(service_results, os_results):
     """
-    Generates a JSON report of the open ports, services, and OS.
+    Generates a report based on the scanned results.
 
     Parameters:
-        open_ports (list): A list of tuples containing open port information.
-        filename (str): The name of the file to save the report to.
-    """
-    report = {
-        "open_ports": []
-    }
-    for port, service, os_name in open_ports:
-        report["open_ports"].append({"port": port, "service": service, "os": os_name})
+        service_results (list): A list of tuples containing port, service name, and version.
+        os_results (list): A list of tuples containing port, service name, and detected OS.
 
-    with open(filename, 'w') as f:
-        json.dump(report, f, indent=4)
-    print(f"Report generated: {filename}")
+    Returns:
+        str: A formatted report string.
+    """
+    report_lines = []
+    report_lines.append("Port Scan Report\n")
+    report_lines.append("=" * 30 + "\n")
+
+    report_lines.append("Service Detection Results:\n")
+    report_lines.append("{:<10} {:<25} {:<20}\n".format("Port", "Service Name", "Version"))
+    report_lines.append("=" * 60 + "\n")
+
+    for port, service, version in service_results:
+        report_lines.append("{:<10} {:<25} {:<20}\n".format(port, service, version))
+
+    report_lines.append("\nOS Fingerprinting Results:\n")
+    report_lines.append("{:<10} {:<25} {:<20}\n".format("Port", "Service Name", "Detected OS"))
+    report_lines.append("=" * 60 + "\n")
+
+    for port, service, detected_os in os_results:
+        report_lines.append("{:<10} {:<25} {:<20}\n".format(port, service, detected_os))
+
+    return ''.join(report_lines)

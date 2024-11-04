@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Port Scan Report</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Port Scanner Report</h1>
+        <div class="report">
+            <h2>Results for the provided IP address </h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Port</th>
+                        <th>Service</th>
+                        <th>Operating System</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for port, service, os in scan_results %}
+                    <tr>
+                        <td>{{ port }}</td>
+                        <td>{{ service }}</td>
+                        <td>{{ os }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3">No open ports detected.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="back-button">
+            <a href="{{ url_for('index') }}">Back to Scanner</a>
+        </div>
+    </div>
+</body>
+</html>

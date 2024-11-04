@@ -1,34 +1,34 @@
 def os_fingerprint(port, service):
     """
-    Attempts to identify the operating system based on the service running on the given port.
-    
+    Performs OS fingerprinting based on the service detected.
+
     Parameters:
-        port (int): The port number that is open.
-        service (str): The service name running on that port.
+        port (int): The port number.
+        service (str): The detected service name.
 
     Returns:
-        str: A string representing the likely operating system.
+        str: A string indicating the detected OS.
     """
     if service == 'SSH':
         return 'Linux/Unix'
-    elif service == 'HTTP' or service == 'HTTPS':
+    elif service == 'HTTP':
         return 'Web Server (varies)'
     elif service == 'FTP':
-        return 'Linux/Unix or Windows'
+        return 'Linux/Unix'
     elif service == 'SMTP':
-        return 'Mail Server (varies)'
-    elif service == 'DNS':
         return 'Linux/Unix or Windows'
+    elif service == 'DNS':
+        return 'Linux/Unix'
     elif service == 'MySQL':
-        return 'Database Server (usually Linux/Unix)'
+        return 'Linux/Unix or Windows'
+    elif service == 'PostgreSQL':
+        return 'Linux/Unix'
     elif service == 'Redis':
-        return 'Database Server (Linux/Unix)'
+        return 'Linux/Unix'
     elif service == 'Telnet':
-        return 'Older Systems (varies, often Linux/Unix)'
+        return 'Linux/Unix or Windows'
     elif service == 'RDP':
         return 'Windows'
-    elif service == 'PostgreSQL':
-        return 'Database Server (usually Linux/Unix)'
-    # Add more known services and their corresponding OS here
-    
+    elif service == 'MongoDB':
+        return 'Linux/Unix'
     return 'Unknown OS'

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Port Scanner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Port Scanner</h1>
+        <form action="/" method="POST">
+            <label for="ip_address">Target IP Address:</label>
+            <input type="text" id="ip_address" name="ip_address" required placeholder="Enter IP address">
+
+            <label for="ports">Ports to Scan (comma-separated):</label>
+            <input type="text" id="ports" name="ports" required placeholder="e.g., 22,80,443">
+
+            <button type="submit">Scan</button>
+        </form>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+            <div class="flash">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

@@ -1,43 +1,40 @@
 import socket
-from concurrent.futures import ThreadPoolExecutor
-from service_detection import get_service_name
+from service_detection import detect_service
 from os_fingerprinting import os_fingerprint
 from report_generator import generate_report
 
-def scan_port(host, port):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        sock.settimeout(1)
-        result = sock.connect_ex((host, port))
-        if result == 0:
-            service = get_service_name(port)
-            os_name = os_fingerprint(port, service)
-            return port, service, os_name  # Return port, service, and OS
-        return None  # Port is closed
+def scan_port(ip, port):
+    """Scans a single port on the target IP address to detect the service."""
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.settimeout(1)
+            result = sock.connect_ex((ip, port))
 
-def scan_ports(host, start_port, end_port):
-    open_ports = []
-    with ThreadPoolExecutor(max_workers=50) as executor:
-        futures = {executor.submit(scan_port, host, port): port for port in range(start_port, end_port + 1)}
-        for future in futures:
-            port_info = future.result()
-            if port_info is not None:
-                open_ports.append(port_info)
-    return open_ports
+            if result == 0:
+                service_name, version = detect_service(port)
+                return (port, service_name, version)
+            else:
+                return (port, 'Closed', 'N/A')
+    except Exception as e:
+        print(f"Error scanning port {port}: {e}")
+        return (port, 'Error', 'N/A')
 
-if __name__ == '__main__':
-    target_host = input("Enter the target host (IP or domain): ")
-    start_port = int(input("Enter the starting port number: "))
-    end_port = int(input("Enter the ending port number: "))
+def main(target_ip, ports):
+    service_results = []
+    os_results = []
 
-    print(f"Scanning {target_host} from port {start_port} to {end_port}...")
-    open_ports = scan_ports(target_host, start_port, end_port)
+    for port in ports:
+        port_info = scan_port(target_ip, port)
+        service_results.append(port_info)
 
-    if open_ports:
-        print("Open ports, services, and OS:")
-        for port, service, os_name in open_ports:
-            print(f"Port: {port}, Service: {service}, OS: {os_name}")
-        
-        # Generate a report
-        generate_report(open_ports)
-    else:
-        print("No open ports found.")
+        detected_os = os_fingerprint(port_info[0], port_info[1])
+        os_results.append((port_info[0], port_info[1], detected_os))
+
+    report = generate_report(service_results, os_results)
+    print(report)
+
+# if __name__ == '__main__':
+#     target_ip = '192.168.1.1'  # Replace with the target IP address
+#     ports_to_scan = [22, 80, 443, 21, 25, 53, 3306, 5432, 6379, 23, 3389, 27017]
+    
+#     main(target_ip, ports_to_scan)
