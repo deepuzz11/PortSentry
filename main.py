@@ -1,3 +1,7 @@
+# main.py
+if __name__ == '__main__':
+    print("This file is not meant to be executed directly. Run the app.py file.")
+
 import socket
 from service_detection import detect_service
 from os_fingerprinting import os_fingerprint

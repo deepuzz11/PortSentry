@@ -3,39 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Port Scan Report</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Scan Report</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9; /* Light gray background */
+            color: #333; /* Dark text for contrast */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container for the main content */
+        .container {
+            max-width: 800px; /* Maximum width of the container */
+            margin: 20px auto; /* Center the container */
+            padding: 20px; /* Padding inside the container */
+            background-color: #ffffff; /* White background for cards */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+        /* Headings */
+        h1 {
+            text-align: center; /* Center the main heading */
+            color: #134477; /* Primary blue color */
+            font-size: 2.5em; /* Larger font size for the main heading */
+            margin-bottom: 20px; /* Space below the heading */
+            font-weight: bold; /* Bold for emphasis */
+            letter-spacing: 1px; /* Slight spacing for a cleaner look */
+        }
+
+        h2 {
+            color: #0056b3; /* Darker blue for subheadings */
+            font-size: 1.8em; /* Increased font size for subheadings */
+            margin-top: 20px; /* Space above subheadings */
+            margin-bottom: 10px; /* Space below subheadings */
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%; /* Full width tables */
+            border-collapse: collapse; /* Remove space between cells */
+            margin: 20px 0; /* Space around tables */
+        }
+
+        th, td {
+            padding: 15px; /* Padding inside table cells */
+            text-align: left; /* Align text to the left */
+            border-bottom: 1px solid #7de393; /* Light gray border */
+        }
+
+        th {
+            background-color: #001569; /* Header background color */
+            color: #ffffff; /* White text for headers */
+            font-weight: bold; /* Bold text for headers */
+        }
+
+        tr:hover {
+            background-color: #f1f1f1; /* Light gray on row hover */
+        }
+
+        /* Back Button */
+        .back-button {
+            text-align: center; /* Center the back button */
+            margin-top: 20px; /* Space above the button */
+        }
+
+        .back-button a {
+            display: inline-block; /* Inline block for button */
+            padding: 10px 20px; /* Padding for button */
+            background-color: #001569; /* Button background color */
+            color: #ffffff; /* Button text color */
+            border-radius: 5px; /* Rounded corners for button */
+            text-decoration: none; /* Remove underline */
+        }
+
+        .back-button a:hover {
+            background-color: #329b37; /* Darker blue on hover */
+        }
+
+        /* Flash Messages */
+        .flash {
+            padding: 10px; /* Padding for flash messages */
+            margin: 10px 0; /* Margin above and below flash messages */
+            border-radius: 5px; /* Rounded corners */
+        }
+
+        .flash.success {
+            background-color: #d4edda; /* Light green for success */
+            color: #155724; /* Darker green text */
+        }
+
+        .flash.error {
+            background-color: #f8d7da; /* Light red for errors */
+            color: #721c24; /* Darker red text */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>Port Scanner Report</h1>
-        <div class="report">
-            <h2>Results for the provided IP address </h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Port</th>
-                        <th>Service</th>
-                        <th>Operating System</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for port, service, os in scan_results %}
-                    <tr>
-                        <td>{{ port }}</td>
-                        <td>{{ service }}</td>
-                        <td>{{ os }}</td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="3">No open ports detected.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <h1>Scan Report</h1>
+        
+        <h2>Service Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Port</th>
+                    <th>Service Name</th>
+                    <th>Version</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for port, service_name, version in report.service_results %}
+                <tr>
+                    <td>{{ port }}</td>
+                    <td>{{ service_name }}</td>
+                    <td>{{ version }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>OS Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Port</th>
+                    <th>Service Name</th>
+                    <th>Detected OS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for port, service_name, detected_os in report.os_results %}
+                <tr>
+                    <td>{{ port }}</td>
+                    <td>{{ service_name }}</td>
+                    <td>{{ detected_os }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
         <div class="back-button">
-            <a href="{{ url_for('index') }}">Back to Scanner</a>
+            <a href="{{ url_for('index') }}">Back</a>
         </div>
     </div>
 </body>

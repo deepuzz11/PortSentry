@@ -11,7 +11,7 @@ def scan_port(ip, port):
     """Scans a single port on the target IP address to detect the service."""
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            sock.settimeout(1)
+            sock.settimeout(1)  # 1 second timeout for the connection attempt
             result = sock.connect_ex((ip, port))
 
             if result == 0:
@@ -28,7 +28,12 @@ def index():
     if request.method == 'POST':
         target_ip = request.form['ip_address']
         ports = request.form.get('ports')  # Get list of ports from form
-        ports = list(map(int, ports.split(',')))  # Convert port strings to integers
+        
+        try:
+            ports = list(map(int, ports.split(',')))  # Convert port strings to integers
+        except ValueError:
+            flash('Please enter valid port numbers.')
+            return redirect(url_for('index'))
 
         if not target_ip or not ports:
             flash('Please enter a valid IP address and select ports to scan.')
